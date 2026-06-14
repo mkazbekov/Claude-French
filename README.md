@@ -1,2 +1,2 @@
-# Perplexity-French
+# Claude-French
 French learning app
