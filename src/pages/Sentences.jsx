@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { sentences } from '../data/sentences';
+import AudioButton from '../components/AudioButton';
 
 export default function Sentences() {
   const [activeTab, setActiveTab] = useState('browse');
@@ -68,7 +69,10 @@ export default function Sentences() {
             <div key={s.id} className="sentence-card">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1">
-                  <div className="sentence-fr">{highlightKeyWords(s.french, s.keyWords)}</div>
+                  <div className="sentence-fr" style={{ display: 'flex', alignItems: 'flex-start', gap: 8, flexWrap: 'wrap' }}>
+                    <span>{highlightKeyWords(s.french, s.keyWords)}</span>
+                    <AudioButton text={s.french} size="sm" showSlow />
+                  </div>
                   {revealed[s.id] && (
                     <div className="sentence-en mt-2">{s.english}</div>
                   )}

@@ -1,7 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { vocabulary } from '../data/vocabulary';
 import { sentences } from '../data/sentences';
 import { useProgress } from '../hooks/useProgress';
+import AudioButton from '../components/AudioButton';
+import { speak } from '../utils/audio';
 
 // ── Flashcard Mode ────────────────────────────────────
 function FlashcardMode() {
@@ -37,12 +39,20 @@ function FlashcardMode() {
               {word.collocations && word.collocations.length > 0 && (
                 <div className="flashcard-hint">Common with: {word.collocations[0]}</div>
               )}
-              <div className="text-xs text-muted mt-4">Click to reveal</div>
+              <div style={{ marginTop: 12 }}>
+                <AudioButton text={word.french} size="lg" showSlow label={`Listen: ${word.french}`} />
+              </div>
+              <div className="text-xs text-muted mt-3">Click card to reveal</div>
             </div>
             <div className="flashcard-back">
               <div className="flashcard-english">{word.english}</div>
               <div className="flashcard-example">{word.exampleSentence}</div>
               <div className="text-xs text-muted mt-2">{word.exampleTranslation}</div>
+              {word.exampleSentence && (
+                <div style={{ marginTop: 10 }}>
+                  <AudioButton text={word.exampleSentence} size="sm" showSlow label="Play example sentence" />
+                </div>
+              )}
             </div>
           </div>
         </div>

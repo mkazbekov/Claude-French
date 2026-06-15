@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { vocabulary, categories } from '../data/vocabulary';
 import { useProgress } from '../hooks/useProgress';
+import AudioButton from '../components/AudioButton';
 
 export default function Vocabulary() {
   const [search, setSearch] = useState('');
@@ -85,7 +86,10 @@ export default function Vocabulary() {
             >
               <div className="flex items-start justify-between mb-1">
                 <div>
-                  <div className="french">{word.french}</div>
+                  <div className="french" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    {word.french}
+                    <AudioButton text={word.french} size="sm" showSlow />
+                  </div>
                   <div className="english">{word.english}</div>
                 </div>
                 <div className="flex gap-2 items-center">
@@ -104,7 +108,10 @@ export default function Vocabulary() {
                 <div>
                   {word.exampleSentence && (
                     <div className="example">
-                      <strong>{word.exampleSentence}</strong>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <strong>{word.exampleSentence}</strong>
+                        <AudioButton text={word.exampleSentence} size="sm" />
+                      </div>
                       <div style={{ color: 'var(--text-muted)', marginTop: 2 }}>{word.exampleTranslation}</div>
                     </div>
                   )}

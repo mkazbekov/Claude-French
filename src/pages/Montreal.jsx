@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { montrealPhrases, montrealCategories } from '../data/montreal';
+import AudioButton from '../components/AudioButton';
 
 export default function Montreal() {
   const [activeCategory, setActiveCategory] = useState(null);
@@ -38,9 +39,12 @@ export default function Montreal() {
                 <div className="phrase-card-header">
                   <div className="flex items-start justify-between">
                     <div>
-                      <div className="french-phrase">{phrase.french}</div>
+                      <div className="french-phrase" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        {phrase.french}
+                        <AudioButton text={phrase.french} size="md" showSlow />
+                      </div>
                       <div className="english-phrase">{phrase.english}</div>
-                      <div className="pronunciation">🔊 {phrase.pronunciationHint}</div>
+                      <div className="pronunciation">🗣 {phrase.pronunciationHint}</div>
                     </div>
                     <div className="flex items-center gap-2" style={{ flexShrink: 0 }}>
                       <span className={`badge ${phrase.level === 'beginner' ? 'badge-green' : 'badge-yellow'}`}>{phrase.level}</span>
@@ -62,6 +66,7 @@ export default function Montreal() {
                         <div key={i} className="dialogue-line">
                           <span className="dialogue-speaker">{line.speaker}:</span>
                           <span>{line.text}</span>
+                          <AudioButton text={line.text} size="sm" />
                         </div>
                       ))}
                     </div>

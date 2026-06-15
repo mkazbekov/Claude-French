@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { grammarLessons } from '../data/grammar';
 import { useProgress } from '../hooks/useProgress';
+import AudioButton from '../components/AudioButton';
 
 function Quiz({ lesson, onComplete }) {
   const [current, setCurrent] = useState(0);
@@ -105,7 +106,12 @@ function LessonView({ lesson, onClose }) {
             <tbody>
               {lesson.examples.map((ex, i) => (
                 <tr key={i}>
-                  <td className="fr">{ex.french}</td>
+                  <td className="fr">
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                      {ex.french}
+                      <AudioButton text={ex.french} size="sm" showSlow />
+                    </span>
+                  </td>
                   <td>{ex.english}</td>
                   {ex.note && <td className="note">{ex.note}</td>}
                 </tr>

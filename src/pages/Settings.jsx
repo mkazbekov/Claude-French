@@ -1,15 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { runAllValidations } from '../data/validation';
 import { vocabulary } from '../data/vocabulary';
 import { grammarLessons } from '../data/grammar';
 import { montrealPhrases } from '../data/montreal';
+import { getFrenchVoices, speak, clearVoiceCache } from '../utils/audio';
 
 export default function Settings() {
   const { state, dispatch } = useApp();
   const { settings, darkMode } = state;
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [validation, setValidation] = useState(null);
+  const [voices, setVoices] = useState([]);
+
+  useEffect(() => {
+    const load = () => setVoices(getFrenchVoices());
+    load();
+    speechSynthesis.addEventListener('voiceschanged', load);
+    return () => speechSynthesis.removeEventListener('voiceschanged', load);
+  }, []);
 
   function runValidation() {
     const result = runAllValidations(vocabulary, grammarLessons, montrealPhrases);
@@ -33,6 +42,55 @@ export default function Settings() {
             <input type="checkbox" checked={darkMode} onChange={() => dispatch({ type: 'TOGGLE_DARK_MODE' })} />
             <span className="toggle-slider" />
           </label>
+        </div>
+      </div>
+
+      {/* Audio */}
+      <div className="card mb-4">
+        <h3 className="section-title">🔊 Audio & Pronunciation</h3>
+        <div className="py-3" style={{ borderBottom: '1px solid var(--border)' }}>
+          <div className="flex items-center justify-between mb-2">
+            <div>
+              <div className="font-semibold text-sm">French Voice</div>
+              <div className="text-xs text-muted">Preferred pronunciation dialect</div>
+            </div>
+            <select
+              className="select"
+              style={{ width: 'auto' }}
+              value={settings.voiceLang || 'fr-CA'}
+              onChange={e => { clearVoiceCache(); dispatch({ type: 'UPDATE_SETTINGS', payload: { voiceLang: e.target.value } }); }}
+            >
+              <option value="fr-CA">Français canadien (fr-CA)</option>
+              <option value="fr-FR">Français de France (fr-FR)</option>
+            </select>
+          </div>
+          {voices.length > 0 ? (
+            <div>
+              <p className="text-xs text-muted mb-2">Available voices on your device:</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {voices.slice(0, 6).map(v => (
+                  <div key={v.name} className="flex items-center justify-between text-xs" style={{ padding: '4px 8px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)' }}>
+                    <span>{v.name}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="badge badge-blue">{v.lang}</span>
+                      <button className="btn btn-sm btn-outline" style={{ padding: '2px 8px', fontSize: '0.75rem' }} onClick={() => speak('Bonjour, je parle français.', { lang: v.lang })}>Test</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="text-xs text-muted">No French voices detected. Install French language packs in your OS settings for better quality audio.</p>
+          )}
+        </div>
+        <div className="flex items-center justify-between py-3">
+          <div>
+            <div className="font-semibold text-sm">Test Audio</div>
+            <div className="text-xs text-muted">Verify pronunciation is working</div>
+          </div>
+          <button className="btn btn-outline btn-sm" onClick={() => speak('Bonjour! Je parle français. Comment allez-vous?', { lang: settings.voiceLang || 'fr-CA' })}>
+            🔊 Test Voice
+          </button>
         </div>
       </div>
 

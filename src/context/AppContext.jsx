@@ -16,7 +16,7 @@ const initialProgress = {
 const initialState = {
   darkMode: false,
   progress: initialProgress,
-  settings: { dailyGoal: 10, showPronunciation: true },
+  settings: { dailyGoal: 10, showPronunciation: true, voiceLang: 'fr-CA' },
 };
 
 function reducer(state, action) {

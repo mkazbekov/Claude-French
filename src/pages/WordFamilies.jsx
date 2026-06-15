@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { wordFamilies, phraseChunks } from '../data/wordFamilies';
+import AudioButton from '../components/AudioButton';
 
 export default function WordFamilies() {
   const [activeTab, setActiveTab] = useState('families');
@@ -57,10 +58,18 @@ export default function WordFamilies() {
                       <tbody>
                         {family.expressions.map((expr, i) => (
                           <tr key={i}>
-                            <td className="fr" style={{ whiteSpace: 'nowrap' }}>{expr.french}</td>
+                            <td className="fr" style={{ whiteSpace: 'nowrap' }}>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                                {expr.french}
+                                <AudioButton text={expr.french} size="sm" showSlow />
+                              </span>
+                            </td>
                             <td style={{ color: 'var(--text-secondary)' }}>{expr.english}</td>
                             <td>
-                              <div style={{ fontSize: '0.82rem', fontStyle: 'italic', color: 'var(--text-primary)' }}>{expr.example}</div>
+                              <div style={{ fontSize: '0.82rem', fontStyle: 'italic', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                                {expr.example}
+                                <AudioButton text={expr.example} size="sm" />
+                              </div>
                               <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{expr.exampleTranslation}</div>
                             </td>
                           </tr>
@@ -88,7 +97,10 @@ export default function WordFamilies() {
             {phraseChunks.map(chunk => (
               <div key={chunk.id} className="card card-sm" style={{ borderLeft: '4px solid var(--primary)' }}>
                 <div className="flex items-center justify-between mb-2">
-                  <span style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--primary)' }}>{chunk.chunk}</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '1.2rem', fontWeight: 700, color: 'var(--primary)' }}>
+                    {chunk.chunk}
+                    <AudioButton text={chunk.chunk} size="sm" showSlow />
+                  </span>
                   <span className={`badge ${chunk.level === 'beginner' ? 'badge-green' : 'badge-yellow'}`}>
                     {chunk.level}
                   </span>
